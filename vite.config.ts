@@ -7,7 +7,7 @@ export default defineConfig({
   plugins: [svelte()],
   build: {
     lib: {
-      entry: resolve(__dirname, 'lib/index.js'),
+      entry: resolve(__dirname, 'lib/index.ts'),
       name: 'LooksiEngine',
       // the proper extensions will be added
       fileName: 'looksi-engine'
