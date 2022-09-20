@@ -3,11 +3,11 @@ import * as PIXI from 'pixi.js';
 class LooksiDisplay {
   renderOptions: PIXI.IRenderOptions;
 
-  renderer: PIXI.Renderer | any;
+  renderer: PIXI.AbstractRenderer;
   ticker: PIXI.Ticker;
   centerStage: PIXI.Container;
 
-  elapsed: number = 0;
+  elapsed = 0;
 
   constructor (view: HTMLCanvasElement) {
     console.log('constructing display...');
@@ -37,7 +37,7 @@ class LooksiDisplay {
   }
 
   setup() {
-    let obj = new PIXI.Graphics();
+    const obj = new PIXI.Graphics();
     obj.beginFill(0xfe0);
     obj.drawRect(10,10,60,60);
 
@@ -46,7 +46,7 @@ class LooksiDisplay {
 
   // This function returns a callback function. It can't be a simple
   // function because of how 'this' works in JS functions. =.=
-  renderCallback(self: any) {
+  renderCallback(self: LooksiDisplay) {
     return function(delta: number) {
       self.elapsed += delta;
 
