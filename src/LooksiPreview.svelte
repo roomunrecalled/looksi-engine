@@ -2,15 +2,23 @@
   import { onMount } from 'svelte';
   import { Looksi } from '../lib/index';
 
+  let anchor;
   let canvas;
 
   onMount(() => {
-    console.log(canvas);
-    const looksi = new Looksi(canvas);
+    console.log(anchor);
+    const looksi = new Looksi(anchor, window);
     looksi.run();
   })
 </script>
 
-<h1>Test</h1>
+<div id="anchor" bind:this={anchor}>
+</div>
 
-<canvas bind:this={canvas}></canvas>
+<style>
+  #anchor {
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
