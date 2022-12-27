@@ -64,9 +64,7 @@ class LooksiDisplay {
 
     console.log(self.memoryRef.props);
     for (const propFile of self.memoryRef.props) {
-      console.log(propFile);
       const spriteFrame = propFile.getSpriteFrame();
-      console.log(spriteFrame);
       const buffer = (spriteFrame) ?
           spriteToTextureBuffer(spriteFrame, self.memoryRef.getPalette()) :
           null;
@@ -76,6 +74,7 @@ class LooksiDisplay {
         sprite.x = propFile.position.x;
         sprite.y = propFile.position.y;
 
+        console.log(sprite);
         self.centerStage.addChild(sprite);
       }
     }

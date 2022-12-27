@@ -14,7 +14,7 @@ abstract class VisualObject extends DataObject {
   // Returns the appropriate SpriteFrame for the current pose
   getSpriteFrame(pose: string, frame = 0, modifiers = {}): SpriteFrame | null {
     if (this.poses.get(pose)) {
-      return this.poses.get(pose)[frame];
+      return this.poses.get(pose).getFrame(frame);
     }
 
     return null;

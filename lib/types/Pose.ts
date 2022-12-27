@@ -24,6 +24,10 @@ class Pose extends DataObject {
     this.loop = loop;
     this.frames = frames;
   }
+
+  getFrame(frameNum: number) : SpriteFrame {
+    return this.frames[frameNum];
+  }
 }
 
 export default Pose;
