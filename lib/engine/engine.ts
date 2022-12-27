@@ -1,28 +1,28 @@
-import { LooksiDisplay } from "./display"
-import {Memory, RoomFile} from "./Memory";
-import {Palette, Pixel, Pose, Prop, Room, SpriteFrame} from "../types";
+import {LooksiDisplay} from './display';
+import {Memory} from './Memory';
+import {Palette, Pixel, Pose, Prop, Room, SpriteFrame} from '../types';
 
 class Looksi {
   display : LooksiDisplay;
-  memory : Memory
+  memory : Memory;
 
-  constructor (view: HTMLCanvasElement) {
-    console.log('constructing Looksi...')
+  constructor(view: HTMLCanvasElement) {
+    console.log('constructing Looksi...');
     this.memory = new Memory();
     this.display = new LooksiDisplay(view, this.memory);
   }
 
-  run () {
+  run() {
     this.testCode();
     console.log('running Looksi');
     this.display.run();
   }
 
-  testCode () {
-    console.log("Directly modifying memory space for testing...")
+  testCode() {
+    console.log('Directly modifying memory space for testing...');
     const testRoom = new Room(new Palette());
 
-    const data: Pixel[] = []
+    const data: Pixel[] = [];
     for (let i = 0; i < 16 * 24; i += 1) {
       switch (i % 9) {
         case Pixel.B:
@@ -42,8 +42,8 @@ class Looksi {
 
     const frames = [new SpriteFrame(data)];
     const poseMap = new Map<string, Pose>;
-    poseMap.set("default", new Pose(undefined, undefined, frames));
-    const testProp = new Prop(false, poseMap)
+    poseMap.set('default', new Pose(undefined, undefined, frames));
+    const testProp = new Prop(false, poseMap);
 
     this.memory.addProp(testProp);
     this.memory.changeRoom(testRoom);

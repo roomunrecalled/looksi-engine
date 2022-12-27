@@ -1,20 +1,19 @@
-import DataObject from "./DataObject";
-import type Pose from "./Pose";
-import VisualObject from "./VisualObject";
+import type Pose from './Pose';
+import VisualObject from './VisualObject';
 
 class Prop extends VisualObject {
-    dataType = 'prop'
+  dataType = 'prop';
 
-    isSolid: boolean
+  isSolid: boolean;
 
-    constructor(
-        isSolid = false,
-        poses: Map<string, Pose>,
-        id: number = null
-    ) {
-        super(poses, id);
-        this.isSolid = isSolid;
-    }
+  constructor(
+      isSolid = false,
+      poses: Map<string, Pose>,
+      id: number = null
+  ) {
+    super(poses, id);
+    this.isSolid = isSolid;
+  }
 }
 
-export default Prop
+export default Prop;

@@ -5,16 +5,16 @@
 let idNum = 0;
 
 abstract class DataObject {
-    readonly id: number
-    dataType: string
+  readonly id: number;
+  dataType: string;
 
-    protected constructor(id: number) {
-        this.id = id || idNum++;
-    }
+  protected constructor(id: number) {
+    this.id = id || idNum++;
+  }
 
-    getId() {
-        return `${this.dataType}-${this.id}`;
-    }
+  getId() {
+    return `${this.dataType}-${this.id}`;
+  }
 }
 
-export default DataObject
+export default DataObject;

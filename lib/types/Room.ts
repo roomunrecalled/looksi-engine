@@ -1,23 +1,23 @@
-import Backdrop from "./Backdrop";
-import DataObject from "./DataObject";
-import Palette from "./Palette";
+import Backdrop from './Backdrop';
+import DataObject from './DataObject';
+import Palette from './Palette';
 
 class Room extends DataObject {
-    dataType = 'room'
+  dataType = 'room';
 
-    palette: Palette
+  palette: Palette;
 
-    backdrop: Backdrop
+  backdrop: Backdrop;
 
-    constructor(
-        palette = new Palette(),
-        backdrop = new Backdrop(),
-        id: number = null
-    ) {
-        super(id);
-        this.palette = palette;
-        this.backdrop = backdrop;
-    }
+  constructor(
+      palette = new Palette(),
+      backdrop = new Backdrop(),
+      id: number = null
+  ) {
+    super(id);
+    this.palette = palette;
+    this.backdrop = backdrop;
+  }
 }
 
-export default Room
+export default Room;

@@ -1,13 +1,13 @@
 import * as PIXI from 'pixi.js';
-import type { Memory, PropFile, RoomFile } from "./Memory";
-import { Pixel, SpriteFrame } from "../types";
-import { Sprite, Texture, utils} from "pixi.js";
+import type {Memory} from './Memory';
+import {Pixel, SpriteFrame} from '../types';
+import {Sprite, Texture, utils} from 'pixi.js';
 
 // constants
-const TRANSPARENT = utils.string2hex("0x00000000");
+const TRANSPARENT = utils.string2hex('0x00000000');
 
 class LooksiDisplay {
-  memoryRef: Memory
+  memoryRef: Memory;
 
   renderOptions: PIXI.IRenderOptions;
 
@@ -18,16 +18,16 @@ class LooksiDisplay {
   elapsed = 0;
 
 
-  constructor (view: HTMLCanvasElement, memoryRef: Memory) {
-    console.log("Linking memory to display...")
-    this.memoryRef = memoryRef
+  constructor(view: HTMLCanvasElement, memoryRef: Memory) {
+    console.log('Linking memory to display...');
+    this.memoryRef = memoryRef;
 
     console.log('constructing display...');
 
-    this.renderOptions = { ... DEFAULT_OPTIONS };
+    this.renderOptions = {...DEFAULT_OPTIONS};
     this.renderOptions.view = view;
 
-    console.log('- initializing ticker.')
+    console.log('- initializing ticker.');
     this.ticker = PIXI.Ticker.shared;
     this.ticker.autoStart = false;
     this.ticker.stop();
@@ -55,11 +55,10 @@ class LooksiDisplay {
   // This function returns a callback function. It can't be a simple
   // function because of how 'this' works in JS functions. =.=
   renderCallback(self: LooksiDisplay) {
-
     // TEST CODE
     const obj = new PIXI.Graphics();
     obj.beginFill(0xfe0);
-    obj.drawRect(10,10,60,60);
+    obj.drawRect(10, 10, 60, 60);
 
     self.centerStage.addChild(obj);
 
@@ -86,7 +85,7 @@ class LooksiDisplay {
     return function(delta: number) {
       self.elapsed += delta;
 
-      //obj.x = 10 + Math.cos(self.elapsed/5.0) * 10.0;
+      // obj.x = 10 + Math.cos(self.elapsed/5.0) * 10.0;
       // render backdrop
 
       // render props
@@ -94,7 +93,8 @@ class LooksiDisplay {
       for (const propFile of self.memoryRef.props) {
         const spriteFrame = propFile.getSpriteFrame()
         const buffer = (spriteFrame) ?
-          spriteToTextureBuffer(spriteFrame, self.memoryRef.getPalette()) : null;
+          spriteToTextureBuffer(spriteFrame, self.memoryRef.getPalette()) :
+          null;
 
         if (buffer) {
           const sprite = new Sprite(Texture.fromBuffer(buffer, 16, 24));
@@ -106,7 +106,7 @@ class LooksiDisplay {
       }
        */
       self.renderer.render(self.centerStage);
-    }
+    };
   }
 }
 
@@ -114,7 +114,7 @@ function spriteToTextureBuffer(
     frame: SpriteFrame,
     palette: { bw: { b:number, w: number }, colors: string[] }
 ): Float32Array {
-  // TODO: add the 'lru-cache' package to avoid reconstructing everything each frame.
+  // TODO: add 'lru-cache' package to avoid reconstructing each frame.
   const buffer = new Float32Array(frame.data.length);
 
   const bw = palette.bw;
@@ -137,7 +137,7 @@ function spriteToTextureBuffer(
     }
   });
 
-  return buffer
+  return buffer;
 }
 
 const DEFAULT_OPTIONS: PIXI.IRenderOptions = {
@@ -157,5 +157,5 @@ const DEFAULT_OPTIONS: PIXI.IRenderOptions = {
 
 export {
   LooksiDisplay,
-  spriteToTextureBuffer
-}
+  spriteToTextureBuffer,
+};

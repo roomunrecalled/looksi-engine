@@ -6,4 +6,4 @@ function indexFunction(incomingText: string) {
 export {
   Looksi,
   indexFunction,
-}
+};

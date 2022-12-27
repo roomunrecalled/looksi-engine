@@ -10,5 +10,8 @@
     "google",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended"
-  ]
+  ],
+  "rules": {
+    "require-jsdoc": 0
+  }
 }
