@@ -1,12 +1,14 @@
 import DataObject from "./DataObject";
-import { Frame, Pixel } from './Frame'
+import { SpriteFrame, Pixel } from './SpriteFrame'
+import Palette from "./Palette";
 import Pose from "./Pose";
 import Prop from "./Prop";
 import Room from "./Room";
 
 export {
     DataObject,
-    Frame,
+    SpriteFrame,
+    Palette,
     Pixel,
     Pose,
     Prop,

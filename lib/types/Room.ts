@@ -1,15 +1,12 @@
 import DataObject from "./DataObject";
+import type Palette from "./Palette";
 
 class Room extends DataObject {
     dataType = 'room'
 
-    backgroundColor: string
-
-    // palette: Palette
+    palette: Palette
 
     // backdrop: Backdrop
-
-
 }
 
 export default Room

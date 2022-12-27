@@ -1,6 +1,14 @@
 import * as PIXI from 'pixi.js';
+import type { Memory, PropFile, RoomFile } from "./Memory";
+import { Pixel, SpriteFrame } from "../types";
+import { Sprite, Texture, utils} from "pixi.js";
+
+// constants
+const TRANSPARENT = utils.string2hex("0x00000000");
 
 class LooksiDisplay {
+  memoryRef: Memory
+
   renderOptions: PIXI.IRenderOptions;
 
   renderer: PIXI.AbstractRenderer;
@@ -9,7 +17,11 @@ class LooksiDisplay {
 
   elapsed = 0;
 
-  constructor (view: HTMLCanvasElement) {
+
+  constructor (view: HTMLCanvasElement, memoryRef: Memory) {
+    console.log("Linking memory to display...")
+    this.memoryRef = memoryRef
+
     console.log('constructing display...');
 
     this.renderOptions = { ... DEFAULT_OPTIONS };
@@ -50,9 +62,53 @@ class LooksiDisplay {
     return function(delta: number) {
       self.elapsed += delta;
 
+      // render backdrop
+
+      // render props
+      for (const propFile of self.memoryRef.props) {
+        const spriteFrame = propFile.getSpriteFrame()
+        const buffer = (spriteFrame) ? spriteToTextureBuffer(spriteFrame, self.memoryRef.getPalette()) : null;
+
+        if (buffer) {
+          const sprite = new Sprite(Texture.fromBuffer(buffer, 16, 24));
+          sprite.x = propFile.position.x;
+          sprite.y = propFile.position.y;
+
+          self.centerStage.addChild(sprite);
+        }
+      }
       self.renderer.render(self.centerStage);
     }
   }
+}
+
+function spriteToTextureBuffer(
+    frame: SpriteFrame,
+    palette: { bw: { b:number, w: number }, colors: string[] }
+): Float32Array {
+  // TODO: add the 'lru-cache' package to avoid reconstructing everything each frame.
+  const buffer = new Float32Array(frame.data.length);
+
+  const bw = palette.bw;
+  const colors = palette.colors.map((value) => utils.string2hex(value));
+  for (const [index, pixel] of frame.data.entries()) {
+    switch (pixel) {
+      case Pixel.B:
+        buffer[index] = bw.b;
+        break;
+      case Pixel.W:
+        buffer[index] = bw.w;
+        break;
+      case Pixel.X:
+        buffer[index] = TRANSPARENT;
+        break;
+      default:
+        buffer[index] = colors[pixel.valueOf()];
+        break;
+    }
+  }
+
+  return buffer
 }
 
 const DEFAULT_OPTIONS: PIXI.IRenderOptions = {

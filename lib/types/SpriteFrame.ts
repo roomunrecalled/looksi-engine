@@ -1,6 +1,6 @@
 import DataObject from "./DataObject";
 
-class Frame extends DataObject {
+class SpriteFrame extends DataObject {
     dataType = 'frame'
 
     data: Pixel[]
@@ -16,6 +16,7 @@ enum Pixel {
     P2 = 2,
     P3 = 3,
     P4 = 4,
+    P5 = 5,
     // Transparent
     X = 5,
     // Black
@@ -25,6 +26,6 @@ enum Pixel {
 }
 
 export {
-    Frame,
+    SpriteFrame,
     Pixel,
 }
