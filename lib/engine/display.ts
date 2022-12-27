@@ -49,25 +49,52 @@ class LooksiDisplay {
   }
 
   setup() {
-    const obj = new PIXI.Graphics();
-    obj.beginFill(0xfe0);
-    obj.drawRect(10,10,60,60);
-
-    this.centerStage.addChild(obj);
+    // setup code
   }
 
   // This function returns a callback function. It can't be a simple
   // function because of how 'this' works in JS functions. =.=
   renderCallback(self: LooksiDisplay) {
+
+    // TEST CODE
+    const obj = new PIXI.Graphics();
+    obj.beginFill(0xfe0);
+    obj.drawRect(10,10,60,60);
+
+    self.centerStage.addChild(obj);
+
+    console.log(self.memoryRef.props);
+    for (const propFile of self.memoryRef.props) {
+      console.log(propFile);
+      const spriteFrame = propFile.getSpriteFrame();
+      console.log(spriteFrame);
+      const buffer = (spriteFrame) ?
+          spriteToTextureBuffer(spriteFrame, self.memoryRef.getPalette()) :
+          null;
+
+      if (buffer) {
+        const sprite = new Sprite(Texture.fromBuffer(buffer, 16, 24));
+        sprite.x = propFile.position.x;
+        sprite.y = propFile.position.y;
+
+        self.centerStage.addChild(sprite);
+      }
+    }
+
+    // TEST CODE
+
     return function(delta: number) {
       self.elapsed += delta;
 
+      //obj.x = 10 + Math.cos(self.elapsed/5.0) * 10.0;
       // render backdrop
 
       // render props
+      /*
       for (const propFile of self.memoryRef.props) {
         const spriteFrame = propFile.getSpriteFrame()
-        const buffer = (spriteFrame) ? spriteToTextureBuffer(spriteFrame, self.memoryRef.getPalette()) : null;
+        const buffer = (spriteFrame) ?
+          spriteToTextureBuffer(spriteFrame, self.memoryRef.getPalette()) : null;
 
         if (buffer) {
           const sprite = new Sprite(Texture.fromBuffer(buffer, 16, 24));
@@ -77,6 +104,7 @@ class LooksiDisplay {
           self.centerStage.addChild(sprite);
         }
       }
+       */
       self.renderer.render(self.centerStage);
     }
   }
@@ -91,7 +119,8 @@ function spriteToTextureBuffer(
 
   const bw = palette.bw;
   const colors = palette.colors.map((value) => utils.string2hex(value));
-  for (const [index, pixel] of frame.data.entries()) {
+
+  frame.data.forEach((pixel, index) => {
     switch (pixel) {
       case Pixel.B:
         buffer[index] = bw.b;
@@ -106,7 +135,7 @@ function spriteToTextureBuffer(
         buffer[index] = colors[pixel.valueOf()];
         break;
     }
-  }
+  });
 
   return buffer
 }
@@ -114,7 +143,7 @@ function spriteToTextureBuffer(
 const DEFAULT_OPTIONS: PIXI.IRenderOptions = {
   antialias: false,
   autoDensity: false,
-  backgroundColor: 0x000,
+  backgroundColor: 0xeeeeee,
   backgroundAlpha: 1,
   useContextAlpha: true,
   clearBeforeRender: true,
@@ -126,4 +155,7 @@ const DEFAULT_OPTIONS: PIXI.IRenderOptions = {
   height: 224,
 };
 
-export default LooksiDisplay;
+export {
+  LooksiDisplay,
+  spriteToTextureBuffer
+}

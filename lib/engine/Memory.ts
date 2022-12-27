@@ -1,31 +1,24 @@
 import type { DataObject, Prop, Room } from '../types'
-import type { Point } from "pixi.js";
-import {utils} from "pixi.js";
+import { Point, utils } from "pixi.js";
 
 // Fancy name for a shared memory space.
 class Memory {
     props: PropFile[] = []
     addProp(prop: Prop) {
-        const propFile = new PropFile();
-        propFile.item = prop;
-
-        this.props.push(propFile);
+        this.props.push(new PropFile(prop));
     }
 
     room: RoomFile
     // Room methods
     changeRoom(room: Room) {
-        const roomFile = new RoomFile();
-        roomFile.item = room;
-
-        this.room = roomFile;
+        this.room = new RoomFile(room);
     }
 
     // Text memory
 
     // Color memory
-    colorB: "0x000000";
-    colorW: "0xffffff";
+    colorB = "0x000000";
+    colorW = "0xffffff";
 
     // Color methods
     getBW() {
@@ -43,26 +36,44 @@ class Memory {
     }
 }
 
-class MemoryFile {
+abstract class MemoryFile {
     item: DataObject
 
-    getId = () => this.item.id
+    protected constructor(item) {
+        this.item = item;
+    }
+
+    getId() {
+        return this.item.getId()
+    }
 }
 
 class PropFile extends MemoryFile {
     declare item: Prop
 
-    getSpriteFrame() {
-        return this.item.getSpriteFrame(this.currentPose, this.currentFrame);
-    }
-
     // Position of the Prop in the room.
     position: Point
 
     // The current pose being displayed at the moment.
-    currentPose = ""
+    currentPose: string
     // The frame from the current pose to display at the moment.
-    currentFrame = 0
+    currentFrame: number
+
+    constructor(
+        prop: Prop,
+        currentPose = 'default',
+        currentFrame = 0,
+        position = new Point(0, 0)
+    ) {
+        super(prop);
+        this.currentPose = currentPose;
+        this.currentFrame = currentFrame;
+        this.position = position;
+    }
+
+    getSpriteFrame() {
+        return this.item.getSpriteFrame(this.currentPose, this.currentFrame);
+    }
 
     static compareFunction = (a, b) => {
         // sort first by vertical position
@@ -85,6 +96,10 @@ class PropFile extends MemoryFile {
 
 class RoomFile extends MemoryFile {
     declare item: Room
+
+    constructor(room) {
+        super(room)
+    }
 
     getPalette() {
         return this.item.palette;
