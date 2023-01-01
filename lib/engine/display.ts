@@ -1,10 +1,11 @@
+import chroma from 'chroma-js';
 import * as PIXI from 'pixi.js';
 import type {Memory} from './Memory';
 import {Pixel, SpriteFrame} from '../types';
-import {Sprite, Texture, utils} from 'pixi.js';
+import {Sprite, Texture} from 'pixi.js';
 
 // constants
-const TRANSPARENT = utils.string2hex('0x00000000');
+const TRANSPARENT = chroma('#00000000').gl();
 
 class LooksiDisplay {
   memoryRef: Memory;
@@ -70,11 +71,18 @@ class LooksiDisplay {
           null;
 
       if (buffer) {
-        const sprite = new Sprite(Texture.fromBuffer(buffer, 16, 24));
+        const sprite = new Sprite(
+            Texture.fromBuffer(
+                buffer, 16, 24, {
+                  format: PIXI.FORMATS.RGBA,
+                  type: PIXI.TYPES.FLOAT,
+                })
+        );
         sprite.x = propFile.position.x;
         sprite.y = propFile.position.y;
 
         console.log(sprite);
+        sprite.scale = new PIXI.ObservablePoint(null, null, 3, 3);
         self.centerStage.addChild(sprite);
       }
     }
@@ -111,29 +119,42 @@ class LooksiDisplay {
 
 function spriteToTextureBuffer(
     frame: SpriteFrame,
-    palette: { bw: { b:number, w: number }, colors: string[] }
+    palette: { bw: {b: string, w: string }, colors: string[] }
 ): Float32Array {
   // TODO: add 'lru-cache' package to avoid reconstructing each frame.
-  const buffer = new Float32Array(frame.data.length);
+  const buffer = new Float32Array(frame.data.length * 4);
 
-  const bw = palette.bw;
-  const colors = palette.colors.map((value) => utils.string2hex(value));
+  const bw = {
+    b: chroma(palette.bw.b).gl(),
+    w: chroma(palette.bw.w).gl(),
+  };
+
+  const colors = palette.colors.map((value) => chroma(value).gl());
+  console.log(bw);
+  console.log(colors);
 
   frame.data.forEach((pixel, index) => {
+    let color: number[];
     switch (pixel) {
       case Pixel.B:
-        buffer[index] = bw.b;
+        color = bw.b;
         break;
       case Pixel.W:
-        buffer[index] = bw.w;
+        color = bw.w;
         break;
       case Pixel.X:
-        buffer[index] = TRANSPARENT;
+        color = TRANSPARENT;
         break;
       default:
-        buffer[index] = colors[pixel.valueOf()];
+        color = colors[pixel.valueOf()];
         break;
     }
+
+    color.forEach(
+        (channelVal, channelIndex) => {
+          buffer[index * 4 + channelIndex] = channelVal;
+        }
+    );
   });
 
   return buffer;

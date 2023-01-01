@@ -1,5 +1,5 @@
 import type {DataObject, Prop, Room} from '../types';
-import {Point, utils} from 'pixi.js';
+import {Point} from 'pixi.js';
 
 // Fancy name for a shared memory space.
 class Memory {
@@ -17,20 +17,16 @@ class Memory {
   // Text memory
 
   // Color memory
-  colorB = '0x000000';
-  colorW = '0xffffff';
+  colorB = '#000000';
+  colorW = '#ffffff';
 
   // Color methods
-  getBW() {
-    return {
-      b: utils.string2hex(this.colorB),
-      w: utils.string2hex(this.colorW),
-    };
-  }
-
   getPalette() {
     return {
-      bw: this.getBW(),
+      bw: {
+        b: this.colorB,
+        w: this.colorW,
+      },
       colors: this.room.getPalette().colors,
     };
   }
