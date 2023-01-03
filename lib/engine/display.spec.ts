@@ -1,5 +1,5 @@
 import {Palette, Pixel, SpriteFrame} from '../types';
-import {spriteToTextureBuffer} from './display';
+import {spriteToTextureBuffer} from './LooksiDisplay';
 import {utils} from 'pixi.js';
 import {equal} from 'assert';
 

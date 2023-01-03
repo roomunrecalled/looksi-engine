@@ -1,4 +1,4 @@
-import {LooksiDisplay} from './display';
+import {LooksiDisplay} from './LooksiDisplay';
 import {Memory} from './Memory';
 import {Palette, Pixel, Pose, Prop, Room, SpriteFrame} from '../types';
 

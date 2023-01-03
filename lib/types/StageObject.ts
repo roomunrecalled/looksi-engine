@@ -2,7 +2,8 @@ import DataObject from './DataObject';
 import type Pose from './Pose';
 import type {SpriteFrame} from './SpriteFrame';
 
-abstract class VisualObject extends DataObject {
+// Parent object for Props and Actor objects.
+abstract class StageObject extends DataObject {
   // The poses contained by this object.
   poses: Map<string, Pose>;
 
@@ -21,5 +22,4 @@ abstract class VisualObject extends DataObject {
   }
 }
 
-export default VisualObject;
-
+export default StageObject;

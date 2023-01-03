@@ -1,7 +1,7 @@
 import type Pose from './Pose';
-import VisualObject from './VisualObject';
+import StageObject from './StageObject';
 
-class Prop extends VisualObject {
+class Prop extends StageObject {
   dataType = 'prop';
 
   isSolid: boolean;

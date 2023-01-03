@@ -7,6 +7,10 @@ import {Sprite, Texture} from 'pixi.js';
 // constants
 const TRANSPARENT = chroma('#00000000').gl();
 
+// TODO: look into batch-loading textures from memory for use in a BaseTexture.
+//  Maybe what we could do is that when a DisplayObject is loaded into the
+//  Memory object, we create a texture from all the frames belonging to the
+//  display object at once.
 class LooksiDisplay {
   memoryRef: Memory;
 
@@ -31,6 +35,7 @@ class LooksiDisplay {
     console.log('- initializing ticker.');
     this.ticker = PIXI.Ticker.shared;
     this.ticker.autoStart = false;
+    this.ticker.maxFPS = 30;
     this.ticker.stop();
 
     console.log('- initializing renderer.');
@@ -65,26 +70,28 @@ class LooksiDisplay {
 
     console.log(self.memoryRef.props);
     for (const propFile of self.memoryRef.props) {
-      const spriteFrame = propFile.getSpriteFrame();
-      const buffer = (spriteFrame) ?
-          spriteToTextureBuffer(spriteFrame, self.memoryRef.getPalette()) :
-          null;
+      let spriteToRender = propFile.sprite;
+      if (!spriteToRender) {
+        const spriteFrame = propFile.getSpriteFrame();
+        const buffer = (spriteFrame) ?
+            spriteToTextureBuffer(spriteFrame, self.memoryRef.getPalette()) :
+            null;
 
-      if (buffer) {
-        const sprite = new Sprite(
+        spriteToRender = new Sprite(
             Texture.fromBuffer(
                 buffer, 16, 24, {
                   format: PIXI.FORMATS.RGBA,
                   type: PIXI.TYPES.FLOAT,
                 })
         );
-        sprite.x = propFile.position.x;
-        sprite.y = propFile.position.y;
-
-        console.log(sprite);
-        sprite.scale = new PIXI.ObservablePoint(null, null, 3, 3);
-        self.centerStage.addChild(sprite);
       }
+
+      spriteToRender.x = propFile.position.x;
+      spriteToRender.y = propFile.position.y;
+
+      console.log(spriteToRender);
+      spriteToRender.scale = new PIXI.ObservablePoint(null, null, 3, 3);
+      self.centerStage.addChild(spriteToRender);
     }
 
     // TEST CODE
@@ -163,7 +170,7 @@ function spriteToTextureBuffer(
 const DEFAULT_OPTIONS: PIXI.IRenderOptions = {
   antialias: false,
   autoDensity: false,
-  backgroundColor: 0xeeeeee,
+  backgroundColor: 0xffffff,
   backgroundAlpha: 1,
   useContextAlpha: true,
   clearBeforeRender: true,
